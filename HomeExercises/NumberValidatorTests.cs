@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using NUnit.Framework;
@@ -19,7 +20,7 @@ namespace HomeExercises
         [TestCase(2, 2, true, TestName = "precision_equals_scale")]
         public void TestNumberValidatorThrows(int precision, int scale, bool onlyPositive)
         {
-            Assert.That(() => new NumberValidator(precision, scale, onlyPositive), Throws.ArgumentException);
+            Assert.Throws<ArgumentException>(() => new NumberValidator(precision, scale, onlyPositive));
         }
 
         [TestCase(17, 2, true, "0.0", ExpectedResult = true, TestName = "0.0_check_right_validation_with_dot")]
