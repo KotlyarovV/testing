@@ -320,6 +320,7 @@ namespace Challenge.IncorrectImplementations
     [IncorrectImplementation]
     public class WordsStatistics_EN1 : IWordsStatistics
     {
+        //каждый раз при взятии статистики она сбрасывается
         private IDictionary<string, int> stats
             = new Dictionary<string, int>();
 
