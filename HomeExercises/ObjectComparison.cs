@@ -5,6 +5,18 @@ namespace HomeExercises
 {
     public class ObjectComparison
     {
+        
+        public bool IdIsPersonId(string property)
+        {
+            var way = property.Split('.');
+            if (way.Length == 0 || way[way.Length - 1] != "Id")
+                return false;
+            for (int i = 0; i < way.Length - 1; i++)
+                if (way[i] != "Parent")
+                    return false;
+            return true;
+        }
+        
         [Test]
         [Description("Проверка текущего царя")]
         [Category("ToRefactor")]
@@ -16,7 +28,8 @@ namespace HomeExercises
                 new Person("Vasili III of Russia", 28, 170, 60, null));
 
             actualTsar.ShouldBeEquivalentTo(expectedTsar, options =>
-                options.Excluding(o => o.SelectedMemberPath.EndsWith("Id")));
+                options.Excluding(o => 
+                    o.SelectedMemberInfo.DeclaringType == typeof(Person) && o.SelectedMemberInfo.Name == "Id"));
         }
 
         /*в случае ошибки мы увидим, что тест не прошел не поймем,
@@ -48,7 +61,7 @@ namespace HomeExercises
             && AreEqual(actual.Parent, expected.Parent);
         }
     }
-
+    
     public class TsarRegistry
     {
         public static Person GetCurrentTsar()
@@ -66,7 +79,7 @@ namespace HomeExercises
         public string Name;
         public Person Parent;
         public int Id;
-
+    
         public Person(string name, int age, int height, int weight, Person parent)
         {
             Id = IdCounter++;

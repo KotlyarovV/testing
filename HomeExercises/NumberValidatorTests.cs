@@ -10,7 +10,7 @@ namespace HomeExercises
     public class NumberValidatorTests
     {
         [Test]
-        public void TestNumberValidatorCorrectInitialization()
+        public void NumberValidator_CorrectInitialization()
         {
             Assert.DoesNotThrow(() => new NumberValidator(1, 0, true));
         }
@@ -18,34 +18,39 @@ namespace HomeExercises
         [TestCase(-1, 2, true, TestName = "precision_less_than_zero")]
         [TestCase(1, 2, true, TestName = "precision_less_than_scale")]
         [TestCase(2, 2, true, TestName = "precision_equals_scale")]
-        public void TestNumberValidatorThrows(int precision, int scale, bool onlyPositive)
+        public void NumberValidator_WrongConstructorArgs_ThrowsException(int precision, int scale, bool onlyPositive)
         {
             Assert.Throws<ArgumentException>(() => new NumberValidator(precision, scale, onlyPositive));
         }
 
-        [TestCase(17, 2, true, "0.0", ExpectedResult = true, TestName = "0.0_check_right_validation_with_dot")]
-        [TestCase(17, 2, true, "2", ExpectedResult = true, TestName = "simple_positive_number")]
-        [TestCase(17, 2, false, "-3", ExpectedResult = true, TestName = "simple_negative_number_onlypositive_off")]
-        [TestCase(3, 2, true, "-0.00", ExpectedResult = false, TestName = "negative_zero_little_precision")]
-
-        [TestCase(3, 2, true, "+0.00", ExpectedResult = false, TestName = "positive_zero_little_precision")]
-        [TestCase(4, 2, true, "+1.23", ExpectedResult = true, TestName = "double_number_validation")]
-        [TestCase(3, 2, true, "+1.23", ExpectedResult = false, TestName = "double_number_validation_little_precision")]
-        [TestCase(3, 2, true, "a.sd", ExpectedResult = false, TestName = "letters_with_dot")]
-        [TestCase(3, 2, true, "asd", ExpectedResult = false, TestName = "validator_test_wrong_format_letters")]
-
-        [TestCase(3, 2, false, "-0.0", ExpectedResult = true, TestName = "negative_zero")]
-        [TestCase(3, 2, true, "+0.0", ExpectedResult = true, TestName = "positive_zero")]
-        [TestCase(3, 2, true, "-1.0", ExpectedResult = false, TestName = "negative_number_onlyPositive_on")]
-        [TestCase(3, 2, true, "10000.0", ExpectedResult = false, TestName = "precision_less_than_length")]
-
-        [TestCase(9, 2, true, "10000...0", ExpectedResult = false, TestName = "many_dots")]
-        [TestCase(9, 2, true, "10.0.00.0", ExpectedResult = false, TestName = "few_dots_in_different_places")]
-        [TestCase(3, 2, true, "0.000", ExpectedResult = false, TestName = "scale_less_than_length")]
-        [TestCase(10, 5, true, "0  000", ExpectedResult = false, TestName = "whitespaces_between_numbers")]
-        public bool TestNumberValidator(int precision, int scale, bool onlyPositive, string numberString)
+        [TestCase(3, 1, true, "-0.000", TestName = "negative_zero_little_scale")]
+        [TestCase(3, 2, true, "-1.0", TestName = "negative_number_onlyPositive_on")]
+        [TestCase(3, 2, true, "10000.0", TestName = "precision_less_than_length")]
+        [TestCase(3, 2, true, "0.000", TestName = "scale_less_than_length")]
+        public void IsValidNumber_NumbersInappropriateValidatorConditions_ShouldBeFalse
+            (int precision, int scale, bool onlyPositive, string numberString)
         {
-            return new NumberValidator(precision, scale, onlyPositive).IsValidNumber(numberString);
+            new NumberValidator(precision, scale, onlyPositive).IsValidNumber(numberString).Should().BeFalse();
+        }
+
+        [TestCase(17, 2, true, "0.0", TestName = "zeros_with_dot")]
+        [TestCase(17, 2, true, "2", TestName = "simple_positive_number")]
+        [TestCase(3, 2, false, "-3.0", TestName = "negative_number")]
+        [TestCase(4, 2, true, "+1.23", TestName = "double_number_validation")]
+        public void IsValidNumber_CorrectNumberAndArgs_ShouldBeTrue(int precision, int scale, bool onlyPositive,
+            string numberString)
+        {
+            new NumberValidator(precision, scale, onlyPositive).IsValidNumber(numberString).Should().BeTrue();
+        }
+
+        [TestCase("10000...0", TestName = "many_dots")]
+        [TestCase(" 0  000", TestName = "whitespaces_between_numbers")]
+        [TestCase("10.0.00.0", TestName = "dots_in_different_places")]
+        [TestCase("a.sd", TestName = "letters_with_dot")]
+        [TestCase("asd", TestName = "validator_test_wrong_format_letters")]
+        public void IsValidNumber_NotNumberInput_ShouldBeFalse(string numberString)
+        {
+            new NumberValidator(17, 5).IsValidNumber(numberString).Should().BeFalse();
         }
     }
 
