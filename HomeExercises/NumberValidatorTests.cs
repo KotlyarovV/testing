@@ -26,8 +26,7 @@ namespace HomeExercises
         [TestCase("-1.0", TestName = "negative_number_with_onlyPositive_on")]
         [TestCase("10000.0", TestName = "precision_less_than_length_of_number")]
         [TestCase("0.000", TestName = "scale_less_than_length_of_fraction")]
-        public void IsValidNumber_NumbersInappropriateValidatorConditions_ShouldBeFalse
-            (int precision, int scale, bool onlyPositive, string numberString)
+        public void IsValidNumber_NumbersInappropriateValidatorConditions_ShouldBeFalse(string numberString)
         {
             new NumberValidator(3, 2, true).IsValidNumber(numberString).Should().BeFalse();
         }
