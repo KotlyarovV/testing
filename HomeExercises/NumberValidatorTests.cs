@@ -23,10 +23,9 @@ namespace HomeExercises
             Assert.Throws<ArgumentException>(() => new NumberValidator(precision, scale, onlyPositive));
         }
 
-        [TestCase(3, 1, true, "-0.000", TestName = "negative_zero_little_scale")]
         [TestCase(3, 2, true, "-1.0", TestName = "negative_number_onlyPositive_on")]
         [TestCase(3, 2, true, "10000.0", TestName = "precision_less_than_length")]
-        [TestCase(3, 2, true, "0.000", TestName = "scale_less_than_length")]
+        [TestCase(3, 2, true, "0.000", TestName = "scale_less_than_length_of_fraction")]
         public void IsValidNumber_NumbersInappropriateValidatorConditions_ShouldBeFalse
             (int precision, int scale, bool onlyPositive, string numberString)
         {
