@@ -10,17 +10,22 @@ namespace HomeExercises
     public class NumberValidatorTests
     {
         [Test]
-        public void NumberValidator_CorrectInitialization()
+        public void Validate_WithDefaultConstructorArgs()
         {
-            Assert.DoesNotThrow(() => new NumberValidator(1, 0, true));
+            Assert.DoesNotThrow(() => new NumberValidator(1));
         }
-        
-        [TestCase(-1, 2, true, TestName = "precision_less_than_zero")]
-        [TestCase(1, 2, true, TestName = "precision_less_than_scale")]
-        [TestCase(2, 2, true, TestName = "precision_equals_scale")]
-        public void NumberValidator_WrongConstructorArgs_ThrowsException(int precision, int scale, bool onlyPositive)
+
+        private const string PrecisionLessOrEualsScaleExceptionMessage =
+            "precision must be a non-negative number less or equal than precision";
+        private const string PrecosiousLessZeroExceptionMessage = "precision must be a positive number";
+        [TestCase(-1, 2, PrecosiousLessZeroExceptionMessage, TestName = "precision_less_than_zero")]
+        [TestCase(1, 2, PrecisionLessOrEualsScaleExceptionMessage, TestName = "precision_less_than_scale")]
+        [TestCase(2, 2, PrecisionLessOrEualsScaleExceptionMessage, TestName = "precision_equals_scale")]
+        public void NumberValidator_WrongConstructorArgs_ThrowsException(int precision, int scale, string message)
         {
-            Assert.Throws<ArgumentException>(() => new NumberValidator(precision, scale, onlyPositive));
+            Action act = () => new NumberValidator(precision, scale);
+            act.ShouldThrow<ArgumentException>()
+                .WithMessage(message);
         }
 
         [TestCase("-1.0", TestName = "negative_number_with_onlyPositive_on")]
@@ -41,6 +46,8 @@ namespace HomeExercises
             new NumberValidator(precision, scale, onlyPositive).IsValidNumber(numberString).Should().BeTrue();
         }
 
+        [TestCase(".023", TestName = "start_with_dot")]
+        [TestCase("23.", TestName = "end_with_dot")]
         [TestCase("10000...0", TestName = "many_dots")]
         [TestCase(" 0  000", TestName = "whitespaces_between_numbers")]
         [TestCase("10.0.00.0", TestName = "dots_in_different_places")]

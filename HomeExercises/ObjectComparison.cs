@@ -1,22 +1,13 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using System.Linq.Expressions;
+using System;
+using FluentAssertions.Common;
 
 namespace HomeExercises
 {
     public class ObjectComparison
     {
-        
-        public bool IdIsPersonId(string property)
-        {
-            var way = property.Split('.');
-            if (way.Length == 0 || way[way.Length - 1] != "Id")
-                return false;
-            for (int i = 0; i < way.Length - 1; i++)
-                if (way[i] != "Parent")
-                    return false;
-            return true;
-        }
-        
         [Test]
         [Description("Проверка текущего царя")]
         [Category("ToRefactor")]
@@ -27,9 +18,10 @@ namespace HomeExercises
             var expectedTsar = new Person("Ivan IV The Terrible", 54, 170, 70,
                 new Person("Vasili III of Russia", 28, 170, 60, null));
 
+            var idName = ((Expression<Func<Person, int>>) (s => s.Id)).GetSelectedMemberInfo().Name;
             actualTsar.ShouldBeEquivalentTo(expectedTsar, options =>
                 options.Excluding(o => 
-                    o.SelectedMemberInfo.DeclaringType == typeof(Person) && o.SelectedMemberInfo.Name == "Id"));
+                        o.SelectedMemberInfo.DeclaringType == typeof(Person) && idName == o.SelectedMemberInfo.Name));
         }
 
         /*в случае ошибки мы увидим, что тест не прошел не поймем,
@@ -46,7 +38,6 @@ namespace HomeExercises
 
             // Какие недостатки у такого подхода? 
             Assert.True(AreEqual(actualTsar, expectedTsar));
-
         }
 
         private bool AreEqual(Person actual, Person expected)
@@ -60,8 +51,8 @@ namespace HomeExercises
             && actual.Weight == expected.Weight
             && AreEqual(actual.Parent, expected.Parent);
         }
-    }
-    
+    }    
+
     public class TsarRegistry
     {
         public static Person GetCurrentTsar()
