@@ -15,9 +15,9 @@ namespace HomeExercises
             Assert.DoesNotThrow(() => new NumberValidator(1));
         }
 
-        private const string PrecisionLessOrEualsScaleExceptionMessage =
+        private const string PrecisionLessOrEualsScaleMessage =
             "precision must be a non-negative number less or equal than precision";
-        private const string PrecosiousLessZeroExceptionMessage = "precision must be a positive number";
+        private const string PrecosiousLessZeroMessage = "precision must be a positive number";
         [TestCase(-1, 2, PrecosiousLessZeroExceptionMessage, TestName = "precision_less_than_zero")]
         [TestCase(1, 2, PrecisionLessOrEualsScaleExceptionMessage, TestName = "precision_less_than_scale")]
         [TestCase(2, 2, PrecisionLessOrEualsScaleExceptionMessage, TestName = "precision_equals_scale")]

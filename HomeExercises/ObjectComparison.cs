@@ -18,7 +18,7 @@ namespace HomeExercises
             var expectedTsar = new Person("Ivan IV The Terrible", 54, 170, 70,
                 new Person("Vasili III of Russia", 28, 170, 60, null));
 
-            var idName = ((Expression<Func<Person, int>>) (s => s.Id)).GetSelectedMemberInfo().Name;
+            var idName = nameof(actualTsar.Id);
             actualTsar.ShouldBeEquivalentTo(expectedTsar, options =>
                 options.Excluding(o => 
                         o.SelectedMemberInfo.DeclaringType == typeof(Person) && idName == o.SelectedMemberInfo.Name));
