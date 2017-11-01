@@ -17,11 +17,10 @@ namespace HomeExercises
 
             var expectedTsar = new Person("Ivan IV The Terrible", 54, 170, 70,
                 new Person("Vasili III of Russia", 28, 170, 60, null));
-
-            var idName = nameof(actualTsar.Id);
+            
             actualTsar.ShouldBeEquivalentTo(expectedTsar, options =>
                 options.Excluding(o => 
-                        o.SelectedMemberInfo.DeclaringType == typeof(Person) && idName == o.SelectedMemberInfo.Name));
+                        o.SelectedMemberInfo.DeclaringType == typeof(Person) && nameof(actualTsar.Id) == o.SelectedMemberInfo.Name));
         }
 
         /*в случае ошибки мы увидим, что тест не прошел не поймем,
