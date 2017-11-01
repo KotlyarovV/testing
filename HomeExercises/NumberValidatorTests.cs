@@ -23,7 +23,8 @@ namespace HomeExercises
         [TestCase(2, 2, PrecisionLessOrEualsScaleMessage, TestName = "precision_equals_scale")]
         public void NumberValidator_WrongConstructorArgs_ThrowsException(int precision, int scale, string message)
         {
-            new Action(() => new NumberValidator(precision, scale)).ShouldThrow<ArgumentException>()
+            this.Invoking((y) => new NumberValidator(precision, scale))
+                .ShouldThrow<ArgumentException>()
                 .WithMessage(message);
         }
 
